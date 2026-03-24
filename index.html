@@ -17,12 +17,12 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
 body::after{content:'';position:fixed;inset:0;opacity:0.4;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
-#app{position:relative;max-width:430px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-.screen{display:none;flex-direction:column;flex:1;overflow:hidden;position:absolute;inset:0;}
-.screen.active{display:flex;animation:sIn 0.3s cubic-bezier(0.16,1,0.3,1);}
+#app{position:relative;max-width:430px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);isolation:isolate;}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden;position:absolute;inset:0;z-index:1;}
+.screen.active{display:flex!important;flex-direction:column;height:100vh;animation:sIn 0.3s cubic-bezier(0.16,1,0.3,1);z-index:1;}
 @keyframes sIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 /* Splash */
-#screen-splash{justify-content:center;align-items:center;gap:20px;background:var(--bg);position:fixed;z-index:1000;}
+#screen-splash{justify-content:center;align-items:center;gap:20px;background:var(--bg);position:fixed;inset:0;z-index:100;}
 .splash-icon{width:96px;height:96px;border-radius:26px;background:linear-gradient(145deg,#1a2235,#0d1525);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 0 60px var(--gold-glow),0 20px 60px rgba(0,0,0,0.5);animation:pp 2.5s ease-in-out infinite;}
 @keyframes pp{0%,100%{box-shadow:0 0 40px var(--gold-glow),0 20px 40px rgba(0,0,0,0.5);}50%{box-shadow:0 0 80px var(--gold-glow),0 24px 60px rgba(0,0,0,0.5);}}
 .splash-name{font-family:'Amiri',serif;font-size:42px;font-weight:700;color:var(--gold2);letter-spacing:2px;text-shadow:0 0 40px var(--gold-glow);}
@@ -55,8 +55,8 @@ select option{background:var(--card2);}
 .auth-divider{text-align:center;color:var(--text3);font-size:13px;margin:20px 0 0;}
 .auth-divider span{color:var(--gold);cursor:pointer;font-weight:700;}
 /* Layout */
-#screen-main{background:var(--bg);}
-.main-content{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h)+12px);-webkit-overflow-scrolling:touch;}
+#screen-main{background:var(--bg);display:flex;flex-direction:column;height:100vh;}
+.main-content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;min-height:0;}
 .main-content::-webkit-scrollbar{display:none;}
 /* Header */
 .app-header{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(8,12,20,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:100;flex-shrink:0;}
@@ -67,7 +67,7 @@ select option{background:var(--card2);}
 .icon-btn:active{transform:scale(0.93);}
 .notif-badge{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:1.5px solid var(--bg);}
 /* Nav */
-.bottom-nav{height:var(--nav-h);display:flex;align-items:center;background:rgba(13,18,32,0.96);backdrop-filter:blur(24px);border-top:1px solid var(--border2);flex-shrink:0;padding:0 8px;padding-bottom:env(safe-area-inset-bottom);}
+.bottom-nav{height:var(--nav-h);display:flex;align-items:center;background:rgba(13,18,32,0.96);backdrop-filter:blur(24px);border-top:1px solid var(--border2);flex-shrink:0;padding:0 8px calc(8px + env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:10;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;cursor:pointer;border-radius:14px;transition:all .25s;position:relative;}
 .nav-item:active{transform:scale(0.9);}
 .nav-icon{font-size:22px;transition:transform .25s;}
@@ -228,8 +228,10 @@ select option{background:var(--card2);}
 #loading.show{display:flex;}
 .spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.fab{position:fixed;bottom:calc(var(--nav-h)+16px);left:20px;width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--gold),#a07830);border:none;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 8px 24px var(--gold-glow);transition:all .2s;z-index:50;}
+.fab{position:absolute;bottom:calc(var(--nav-h)+16px);left:20px;width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--gold),#a07830);border:none;align-items:center;justify-content:center;font-size:28px;cursor:pointer;box-shadow:0 8px 32px var(--gold-glow);transition:all .2s;z-index:99;color:#080c14;font-weight:900;}
 .fab:active{transform:scale(0.9);}
+.back-fab{position:absolute;bottom:calc(var(--nav-h)+16px);right:20px;width:56px;height:56px;border-radius:18px;background:var(--card2);border:1.5px solid var(--border);align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.3);transition:all .2s;z-index:99;color:var(--gold);}
+.back-fab:active{transform:scale(0.9);}
 .dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:300;display:none;align-items:center;justify-content:center;padding:24px;}
 .dialog-overlay.open{display:flex;}
 .dialog{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:360px;text-align:center;animation:di .3s cubic-bezier(0.16,1,0.3,1);}
@@ -284,7 +286,7 @@ select option{background:var(--card2);}
   </div>
 </div>
 <!-- MAIN -->
-<div class="screen" id="screen-main">
+<div class="screen" id="screen-main" style="display:none;flex-direction:column;height:100vh;position:relative;">
   <div class="app-header">
     <div class="header-logo">فاكتبوه</div>
     <div class="header-actions">
@@ -316,8 +318,8 @@ select option{background:var(--card2);}
     <!-- SEARCH -->
     <div class="tab-view" id="tab-search">
       <div class="search-bar-wrap">
-        <div class="search-bar"><span class="search-icon">🔍</span>
-          <input type="text" id="search-input" placeholder="ابحث بالاسم أو الهاتف أو @username" oninput="doSearch(this.value)"></div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:10px;">ابحث عن شخص لتسجيل دين معه 👇</div><div class="search-bar"><span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="اسم أو 01xxxxxxx أو @username" oninput="doSearch(this.value)"></div>
       </div>
       <div id="search-results"><div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">ابحث عن أشخاص</div><div class="empty-sub">اكتب على الأقل حرفين</div></div></div>
     </div>
@@ -355,6 +357,8 @@ select option{background:var(--card2);}
     <div class="nav-item" id="nav-profile" onclick="switchTab('profile')"><div class="nav-icon">👤</div><div class="nav-label">حسابي</div></div>
   </div>
 </div>
+<!-- FAB -->
+<button class="fab" id="fab" onclick="openAddDebt()" style="display:none;">＋</button>
 <!-- DETAIL SCREEN -->
 <div class="screen" id="screen-detail">
   <div class="app-header">
@@ -364,7 +368,7 @@ select option{background:var(--card2);}
       <div class="icon-btn" onclick="shareDebtWhatsApp()">💬</div>
     </div>
   </div>
-  <div style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;">
+  <div style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;padding-bottom:80px;">
     <div class="detail-header">
       <div class="detail-user-row">
         <div class="detail-avatar" id="detail-avatar">؟</div>
@@ -387,8 +391,7 @@ select option{background:var(--card2);}
     <div style="height:24px;"></div>
   </div>
 </div>
-<!-- FAB -->
-<button class="fab" id="fab" style="display:none;" onclick="openAddDebt()">＋</button>
+
 <!-- ADD DEBT SHEET -->
 <div class="sheet-overlay" id="add-debt-sheet" onclick="closeSheet(event,'add-debt-sheet')">
   <div class="sheet">
@@ -490,12 +493,60 @@ window.addEventListener('load',()=>window.boot());
 const S={user:null,debts:[],debtUsers:{},requests:[],notifications:[],privacyMode:false,debtType:'borrowed',currency:'EGP',tag:'personal',targetUser:null,currentDebt:null,currentOtherUser:null,transactions:[],ratingScore:0,txActionId:null,txActionDebtId:null,txActionType:null};
 const CURRENCIES=['EGP','USD','EUR','SAR'];
 const TAGS={personal:'👤 شخصي',work:'💼 عمل',family:'👨‍👩‍👧 عائلي',rent:'🏠 إيجار',other:'📦 أخرى'};
-window.boot=async function(){const s=localStorage.getItem('faktoboh_user');if(s){try{S.user=JSON.parse(s);await refreshUser();goTo('main');loadDashboard();updateProfileUI();}catch(e){goTo('login');}}else{setTimeout(()=>goTo('login'),1800);}};
+window.boot=async function(){
+  const s=localStorage.getItem('faktoboh_user');
+  if(s){
+    try{
+      S.user=JSON.parse(s);
+      await refreshUser();
+      goTo('main');
+      loadDashboard();
+      updateProfileUI();
+      updateFab('main');
+    }catch(e){goTo('login');}
+  }else{setTimeout(()=>goTo('login'),1800);}
+};
 async function refreshUser(){if(!S.user?.id)return;const snap=await window._get(window._doc('users',S.user.id));if(snap.exists()){S.user={id:snap.id,...snap.data()};localStorage.setItem('faktoboh_user',JSON.stringify(S.user));}}
-window.goTo=function(screen){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const el=document.getElementById('screen-'+screen);if(el)el.classList.add('active');const fab=document.getElementById('fab');if(fab)fab.style.display=(screen==='main')?'flex':'none';if(screen==='main')updateProfileUI();};
-window.switchTab=function(tab){document.querySelectorAll('.tab-view').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const tv=document.getElementById('tab-'+tab);const nv=document.getElementById('nav-'+tab);if(tv)tv.classList.add('active');if(nv)nv.classList.add('active');const fab=document.getElementById('fab');if(fab)fab.style.display=(tab==='home')?'flex':'none';if(tab==='notifs')markAllRead();if(tab==='stats')renderStats();};
-window.doLogin=async function(){const id=document.getElementById('login-id').value.trim();if(!id){showToast('⚠️ ادخل رقم الهاتف أو اليوزرنيم');return;}showLoading(true);try{const col=window._col('users');let snap=await window._getDocs(window._query(col,window._where('phone','==',id)));if(snap.empty)snap=await window._getDocs(window._query(col,window._where('username','==',id)));if(snap.empty){showToast('❌ المستخدم غير موجود');showLoading(false);return;}const d=snap.docs[0];S.user={id:d.id,...d.data()};localStorage.setItem('faktoboh_user',JSON.stringify(S.user));showLoading(false);goTo('main');loadDashboard();showToast('✅ أهلاً '+S.user.name);}catch(e){showLoading(false);showToast('❌ خطأ في الاتصال');}};
-window.doRegister=async function(){const name=document.getElementById('reg-name').value.trim();const username=document.getElementById('reg-username').value.trim().replace('@','');const phone=document.getElementById('reg-phone').value.trim();if(!name||!username||!phone){showToast('⚠️ ادخل كل البيانات');return;}if(!/^01[0125][0-9]{8}$/.test(phone)){showToast('⚠️ رقم الهاتف غير صحيح');return;}if(username.length<3){showToast('⚠️ اليوزرنيم على الأقل 3 حروف');return;}showLoading(true);try{const col=window._col('users');const u1=await window._getDocs(window._query(col,window._where('username','==',username)));if(!u1.empty){showToast('❌ اليوزرنيم مستخدم');showLoading(false);return;}const u2=await window._getDocs(window._query(col,window._where('phone','==',phone)));if(!u2.empty){showToast('❌ رقم الهاتف مسجل');showLoading(false);return;}const ref=await window._add(col,{name,username,phone,trustScore:5.0,totalRatings:0,blockedUsers:[],createdAt:window._serverTimestamp()});S.user={id:ref.id,name,username,phone,trustScore:5.0,blockedUsers:[]};localStorage.setItem('faktoboh_user',JSON.stringify(S.user));showLoading(false);goTo('main');loadDashboard();showToast('✅ تم إنشاء الحساب');}catch(e){showLoading(false);showToast('❌ '+e.message);}};
+window.goTo=function(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('screen-'+screen);
+  if(el)el.classList.add('active');
+  updateFab(screen);
+  if(screen==='main')updateProfileUI();
+};
+function updateFab(screen){
+  const fab=document.getElementById('fab');
+  const backFab=document.getElementById('back-fab');
+  if(screen==='main'){
+    const activeTab=document.querySelector('.tab-view.active');
+    const showFabTabs=['tab-home','tab-search'];
+    if(fab)fab.style.display=(activeTab&&showFabTabs.includes(activeTab.id))?'flex':'none';
+    if(backFab)backFab.style.display='none';
+  }else if(screen==='detail'){
+    if(fab)fab.style.display='none';
+    if(backFab)backFab.style.display='flex';
+  }else{
+    if(fab)fab.style.display='none';
+    if(backFab)backFab.style.display='none';
+  }
+}
+window.switchTab=function(tab){
+  document.querySelectorAll('.tab-view').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const tv=document.getElementById('tab-'+tab);
+  const nv=document.getElementById('nav-'+tab);
+  if(tv)tv.classList.add('active');
+  if(nv)nv.classList.add('active');
+  const fab=document.getElementById('fab');
+  const backFab=document.getElementById('back-fab');
+  const showFabTabs=['home','search'];
+  if(fab)fab.style.display=showFabTabs.includes(tab)?'flex':'none';
+  if(backFab)backFab.style.display='none';
+  if(tab==='notifs')markAllRead();
+  if(tab==='stats')renderStats();
+};
+window.doLogin=async function(){const id=document.getElementById('login-id').value.trim();if(!id){showToast('⚠️ ادخل رقم الهاتف أو اليوزرنيم');return;}showLoading(true);try{const col=window._col('users');let snap=await window._getDocs(window._query(col,window._where('phone','==',id)));if(snap.empty)snap=await window._getDocs(window._query(col,window._where('username','==',id)));if(snap.empty){showToast('❌ المستخدم غير موجود');showLoading(false);return;}const d=snap.docs[0];S.user={id:d.id,...d.data()};localStorage.setItem('faktoboh_user',JSON.stringify(S.user));showLoading(false);goTo('main');loadDashboard();updateFab('main');showToast('✅ أهلاً '+S.user.name);}catch(e){showLoading(false);showToast('❌ خطأ في الاتصال');}};
+window.doRegister=async function(){const name=document.getElementById('reg-name').value.trim();const username=document.getElementById('reg-username').value.trim().replace('@','');const phone=document.getElementById('reg-phone').value.trim();if(!name||!username||!phone){showToast('⚠️ ادخل كل البيانات');return;}if(!/^01[0125][0-9]{8}$/.test(phone)){showToast('⚠️ رقم الهاتف غير صحيح');return;}if(username.length<3){showToast('⚠️ اليوزرنيم على الأقل 3 حروف');return;}showLoading(true);try{const col=window._col('users');const u1=await window._getDocs(window._query(col,window._where('username','==',username)));if(!u1.empty){showToast('❌ اليوزرنيم مستخدم');showLoading(false);return;}const u2=await window._getDocs(window._query(col,window._where('phone','==',phone)));if(!u2.empty){showToast('❌ رقم الهاتف مسجل');showLoading(false);return;}const ref=await window._add(col,{name,username,phone,trustScore:5.0,totalRatings:0,blockedUsers:[],createdAt:window._serverTimestamp()});S.user={id:ref.id,name,username,phone,trustScore:5.0,blockedUsers:[]};localStorage.setItem('faktoboh_user',JSON.stringify(S.user));showLoading(false);goTo('main');loadDashboard();updateFab('main');showToast('✅ تم إنشاء الحساب');}catch(e){showLoading(false);showToast('❌ '+e.message);}};
 window.doLogout=function(){if(!confirm('هتخرج من الحساب؟'))return;localStorage.removeItem('faktoboh_user');S.user=null;S.debts=[];S.debtUsers={};goTo('login');};
 function loadDashboard(){if(!S.user)return;const uid=S.user.id;let d1=[],d2=[];const renderAll=async()=>{const all=[...d1,...d2].filter(d=>d.netAmount!==0);S.debts=all;for(const d of all){const oid=d.user1Id===uid?d.user2Id:d.user1Id;if(!S.debtUsers[oid]){const s=await window._get(window._doc('users',oid));if(s.exists())S.debtUsers[oid]={id:s.id,...s.data()};}}renderDebtsList();updateTotals();};
 window._onSnapshot(window._query(window._col('debts'),window._where('user1Id','==',uid)),snap=>{d1=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll();});
@@ -517,7 +568,7 @@ window.doSearch=function(q){clearTimeout(searchTimer);if(q.length<2){document.ge
 async function runSearch(q){const uid=S.user?.id;const col=window._col('users');const res={};try{const bp=await window._getDocs(window._query(col,window._where('phone','==',q)));bp.docs.forEach(d=>{if(d.id!==uid)res[d.id]={id:d.id,...d.data()};});const bu=await window._getDocs(window._query(col,window._where('username','==',q)));bu.docs.forEach(d=>{if(d.id!==uid)res[d.id]={id:d.id,...d.data()};});const bn=await window._getDocs(window._query(col,window._where('name','>=',q),window._where('name','<=',q+'\uf8ff'),window._limit(8)));bn.docs.forEach(d=>{if(d.id!==uid)res[d.id]={id:d.id,...d.data()};});const list=Object.values(res);const el=document.getElementById('search-results');if(!list.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">😕</div><div class="empty-title">لا توجد نتائج</div></div>';return;}el.innerHTML=list.map(u=>`<div class="user-card" onclick='selectUserForDebt(${JSON.stringify(u)})'><div class="user-avatar">${u.name.charAt(0)}</div><div class="user-info"><div class="user-name">${u.name}</div><div class="user-handle">@${u.username} · ${u.phone}</div></div><div class="trust-badge">⭐ ${(u.trustScore||5).toFixed(1)}</div></div>`).join('');}catch(e){showToast('❌ خطأ في البحث');}}
 window.selectUserForDebt=function(user){S.targetUser=user;document.getElementById('sheet-target-name').textContent=user.name;document.getElementById('sheet-target-handle').textContent='@'+user.username;document.getElementById('sheet-target-icon').textContent=user.name.charAt(0);openAddDebt();};
 window.openAddDebtForUser=function(){if(S.currentOtherUser){S.targetUser=S.currentOtherUser;document.getElementById('sheet-target-name').textContent=S.currentOtherUser.name;document.getElementById('sheet-target-handle').textContent='@'+S.currentOtherUser.username;document.getElementById('sheet-target-icon').textContent=S.currentOtherUser.name.charAt(0);}openAddDebt();};
-window.openAddDebt=function(){if(!S.targetUser){switchTab('search');showToast('ابحث عن شخص أولاً');return;}document.getElementById('add-debt-sheet').classList.add('open');};
+window.openAddDebt=function(){if(!S.targetUser){switchTab('search');setTimeout(()=>{const inp=document.getElementById('search-input');if(inp)inp.focus();},300);showToast('🔍 ابحث عن شخص أولاً ثم اضغط عليه');return;}document.getElementById('add-debt-sheet').classList.add('open');};
 window.closeAddDebt=function(){document.getElementById('add-debt-sheet').classList.remove('open');};
 window.closeSheet=function(e,id){if(e.target.id===id)document.getElementById(id).classList.remove('open');};
 window.setType=function(t){S.debtType=t;document.getElementById('type-borrowed').className='type-btn'+(t==='borrowed'?' active':'');document.getElementById('type-lent').className='type-btn'+(t==='lent'?' active lent':'');};
